@@ -51,14 +51,16 @@
 import SwiftUI
 
 struct SummaryView: View {
-    // App sheets
+    // App sheets you already have
     @State private var showSocial = false
     @State private var showEmail  = false
     @State private var showBlog   = false
 
-    // Content sheet after “Continue”
-    @State private var showContent = false
-    @State private var contentKind: ContentKind = .social
+    // Composer / List handoff
+    @State private var showComposer = false
+    @State private var showList     = false
+    @State private var composerKind: MNContentKind = .social
+    @State private var justMadeItem: MNContentItem?
 
     var body: some View {
         ScrollView {
@@ -74,31 +76,22 @@ Today’s discussion focused on simplifying the onboarding flow and aligning it 
 
             VStack(spacing: 12) {
                 AppRowWithPill(
-                    iconBG: Color(.systemIndigo),
-                    iconName: "pencil.circle.fill",
-                    title: "Social Media",
-                    subtitle: "Whether you play video games",
-                    pillTitle: "Try it",
-                    action: { showSocial = true }
-                )
+                    iconBG: Color(.systemIndigo), iconName: "pencil.circle.fill",
+                    title: "Social Media", subtitle: "Whether you play video games",
+                    pillTitle: "Try it"
+                ) { showSocial = true }
 
                 AppRowWithPill(
-                    iconBG: Color(.systemGreen),
-                    iconName: "tray.full.fill",
-                    title: "Email Template",
-                    subtitle: "Whether you play video games",
-                    pillTitle: "Try it",
-                    action: { showEmail = true }
-                )
+                    iconBG: Color(.systemGreen), iconName: "tray.full.fill",
+                    title: "Email Template", subtitle: "Whether you play video games",
+                    pillTitle: "Try it"
+                ) { showEmail = true }
 
                 AppRowWithPill(
-                    iconBG: Color(.systemOrange),
-                    iconName: "pencil.tip.crop.circle.fill",
-                    title: "Blog",
-                    subtitle: "Whether you play video games",
-                    pillTitle: "Try it",
-                    action: { showBlog = true }
-                )
+                    iconBG: Color(.systemOrange), iconName: "pencil.tip.crop.circle.fill",
+                    title: "Blog", subtitle: "Whether you play video games",
+                    pillTitle: "Try it"
+                ) { showBlog = true }
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 24)
@@ -116,37 +109,55 @@ Today’s discussion focused on simplifying the onboarding flow and aligning it 
             .padding(.horizontal, 20)
             .padding(.bottom, 32)
         }
-        // MARK: Sheets
+        // ===== Sheets (unchanged look) =====
         .sheet(isPresented: $showSocial) {
             SocialMediaSheet {
-                // close -> then open Content
-                contentKind = .social
+                composerKind = .social
                 showSocial = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { showContent = true }
+                showComposer = true
             }
             .presentationDetents([.fraction(0.78), .large])
+            .presentationCornerRadius(28)
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showEmail) {
             EmailTemplateSheet {
-                contentKind = .email
+                composerKind = .email
                 showEmail = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { showContent = true }
+                showComposer = true
             }
             .presentationDetents([.fraction(0.78), .large])
+            .presentationCornerRadius(28)
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showBlog) {
             BlogSheet {
-                contentKind = .blog
+                composerKind = .blog
                 showBlog = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { showContent = true }
+                showComposer = true
             }
             .presentationDetents([.fraction(0.78), .large])
+            .presentationCornerRadius(28)
             .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $showContent) {
-            ContentListView(kind: contentKind)   // static data inside
+        // New Content composer
+        .sheet(isPresented: $showComposer) {
+            NewContentView(kind: composerKind) { item in
+                justMadeItem = item
+                showComposer = false
+                showList = true
+            }
+            .presentationDetents([.large])
+            .presentationCornerRadius(28)
+            .presentationDragIndicator(.visible)
+        }
+        // Contents list (shows the new item at top)
+        .sheet(isPresented: $showList) {
+            ContentListView(kind: composerKind, newlyAdded: justMadeItem)
+                .presentationDetents([.large])
+                .presentationCornerRadius(28)
+                .presentationDragIndicator(.visible)
         }
     }
 }
+
