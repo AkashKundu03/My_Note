@@ -1,17 +1,18 @@
 //
-//  MyNoteViewApp.swift
+//  MyNoteApp.swift
 //  MyNoteView
 //
 //  Created by Akash Kundu on 24/09/25.
 //
 
+
 import SwiftUI
 
 @main
-struct MyNoteViewApp: App {
+struct MyNoteApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView()   // loads ContentView, which shows MyNoteView
         }
     }
 }

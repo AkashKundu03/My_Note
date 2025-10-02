@@ -16,6 +16,11 @@
 			path = MyNoteView;
 			sourceTree = "<group>";
 		};
+		C0FDB6012E8341930041A7A6 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				C0FDB5F02E8340CB0041A7A6 /* MyNoteView */,
+				C0FDB6012E8341930041A7A6 /* Views */,
 				C0FDB5EF2E8340CB0041A7A6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,6 +68,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				C0FDB5F02E8340CB0041A7A6 /* MyNoteView */,
+				C0FDB6012E8341930041A7A6 /* Views */,
 			);
 			name = MyNoteView;
 			packageProductDependencies = (
