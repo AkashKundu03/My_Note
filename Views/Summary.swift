@@ -55,6 +55,7 @@ struct SummaryView: View {
     @State private var showSocial = false
     @State private var showEmail  = false
     @State private var showBlog   = false
+    @State private var showTranslate   = false
 
     // Composer / List handoff
     @State private var showComposer = false
@@ -92,7 +93,14 @@ Today’s discussion focused on simplifying the onboarding flow and aligning it 
                     title: "Blog", subtitle: "Whether you play video games",
                     pillTitle: "Try it"
                 ) { showBlog = true }
+                
+                AppRowWithPill(
+                    iconBG: Color(.systemPurple), iconName: "globe.badge.chevron.backward",
+                    title: "Translate", subtitle: "Whether you play video games",
+                    pillTitle: "Try it"
+                ) { showTranslate = true }
             }
+            
             .padding(.horizontal, 20)
             .padding(.bottom, 24)
 
@@ -140,6 +148,16 @@ Today’s discussion focused on simplifying the onboarding flow and aligning it 
             .presentationCornerRadius(28)
             .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $showTranslate) {
+            TranslateSheet {
+                composerKind = .blog
+                showBlog = false
+                showComposer = true
+            }
+            .presentationDetents([.fraction(0.78), .large])
+            .presentationCornerRadius(28)
+            .presentationDragIndicator(.visible)
+        }
         // New Content composer
         .sheet(isPresented: $showComposer) {
             NewContentView(kind: composerKind) { item in
@@ -160,4 +178,6 @@ Today’s discussion focused on simplifying the onboarding flow and aligning it 
         }
     }
 }
-
+#Preview {
+    SummaryView()
+}
